@@ -1,85 +1,66 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <n-config-provider :theme="themeLight">
+  <div class="section">
+    <div class="container">
+      <div class="title">
+        University prediction
+      </div>
+      <div class="columns">
+        <div class="column is-3">
+          <n-card>
+            <n-form ref="formRef" :model="{}">
+              <n-form-item path="age" label="Grade">
+                <n-input @keydown.enter.prevent placeholder="Insert your grade" />
+              </n-form-item>
+              <n-form-item path="age" label="Cota 30%">
+                <n-checkbox  />
+              </n-form-item>
+            </n-form>
+          </n-card>
+        </div>
+        <div class="column is-9">
+          <div class="level">
+              <n-input />
+              <n-button>
+                Search
+              </n-button>
+          </div>
+          <div class="level">
+            <div class="level-item">
+              <n-data-table
+                :columns="tableSchema"
+                :data="data"
+                :pagination="false"
+                :bordered="true"
+                :striped="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <RouterView />
+  </div>
+    </n-config-provider>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+<script setup lang="ts">
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+import {onMounted, ref} from "vue";
+import {GetTableSchema} from "@/table-schema";
+import {getData} from "@/tableData";
+import {NButton, NCard, NCheckbox, NDataTable, NForm, NFormItem, NInput} from "naive-ui";
+import themeLight from "naive-ui/es/rate/styles/light";
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+const data = ref([])
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+const tableSchema = GetTableSchema();
 
-nav a:first-of-type {
-  border: 0;
-}
+const lightTheme = themeLight;
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+onMounted(() => {
+  data.value = getData();
+})
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
+</script>
